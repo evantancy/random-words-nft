@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { utils } from "ethers";
+import { AddressContext } from "./AddressContext";
 
 const Wallet = () => {
-    const [defaultAccount, setDefaultAccount] = useState(null);
     const [userBalance, setUserBalance] = useState(null);
     const [connButtonText, setConnButtonText] = useState("Connect Wallet");
+    const { address, setAddress } = useContext(AddressContext);
 
     const provider = window.ethereum;
 
@@ -32,7 +33,7 @@ const Wallet = () => {
     };
 
     const accountHandler = (_account) => {
-        setDefaultAccount(_account);
+        setAddress(_account);
         getUserBalance(_account);
     };
 
@@ -58,7 +59,7 @@ const Wallet = () => {
 
     const renderAccountDetails = () => (
         <div>
-            <div>Address: {defaultAccount}</div>
+            <div>Address: {address}</div>
             <div>Balance: {userBalance}</div>
         </div>
     );
@@ -69,9 +70,7 @@ const Wallet = () => {
 
     return (
         <div className="Wallet">
-            {defaultAccount === null
-                ? renderConnectButton()
-                : renderAccountDetails()}
+            {address === null ? renderConnectButton() : renderAccountDetails()}
         </div>
     );
 };
