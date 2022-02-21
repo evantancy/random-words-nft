@@ -1,5 +1,5 @@
-import logo from "./logo.svg";
-import "./App.css";
+import logo from "./assets/logo.png";
+import "./css/App.css";
 import React, { useState } from "react";
 import Wallet from "./Wallet";
 import Mint from "./Mint";
@@ -10,7 +10,6 @@ const Body = () => {
 
     return (
         <div>
-            <p>Symmetrical Pixels is a collection of ...</p>
             <AddressContext.Provider value={{ address, setAddress }}>
                 <Wallet />
                 <Mint />
@@ -22,9 +21,6 @@ const Body = () => {
 const Header = () => (
     <header className="header">
         <img src={logo} className="logo" alt="logo" />
-        <p>
-            Edit <code>src/App.js</code> and save to reload.
-        </p>
     </header>
 );
 
