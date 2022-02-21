@@ -1,29 +1,27 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { ethers } from "ethers";
+import React, { useState } from "react";
 import Wallet from "./Wallet";
 import Mint from "./Mint";
+import { AddressContext } from "./AddressContext";
 
-// this is the longer version of code below!!!
-// const Body = () => {
-//     return (
-//         <div>
-//             <p>my name jeff</p>
-//         </div>
-//     );
-// }
+const Body = () => {
+    const [address, setAddress] = useState(null);
 
-const Body = () => (
-    <div>
-        <p>Symmetrical Pixels is a collection of ...</p>
-        <Wallet />
-        <Mint />
-    </div>
-);
+    return (
+        <div>
+            <p>Symmetrical Pixels is a collection of ...</p>
+            <AddressContext.Provider value={{ address, setAddress }}>
+                <Wallet />
+                <Mint />
+            </AddressContext.Provider>
+        </div>
+    );
+};
 
 const Header = () => (
-    <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <header className="header">
+        <img src={logo} className="logo" alt="logo" />
         <p>
             Edit <code>src/App.js</code> and save to reload.
         </p>
@@ -31,7 +29,7 @@ const Header = () => (
 );
 
 const App = () => (
-    <div className="App">
+    <div className="container">
         <Header />
         <Body />
     </div>
