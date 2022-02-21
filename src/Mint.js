@@ -30,27 +30,22 @@ const Mint = () => {
             );
 
             // call Solidity mint function
-            let tx = await contract.mint();
+            const tx = await contract.mint();
+            toast(
+                <a
+                    href={`${RINKEBY_URL}/tx/${tx.hash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    View your transaction
+                </a>,
+                toastOptions
+            );
             // wait to be mined
-            let receipt = await tx.wait();
-
-            notifyMintTx(receipt, toastOptions);
+            await tx.wait();
         } catch (error) {
             console.log(error);
         }
-    };
-
-    const notifyMintTx = (_receipt) => {
-        toast(
-            <a
-                href="{RINKEBY_URL}/tx/{_receipt.transactionHash}"
-                target="_blank"
-                rel="noopener"
-            >
-                View your transaction
-            </a>,
-            toastOptions
-        );
     };
 
     const renderMintButton = () => (
