@@ -58,14 +58,16 @@ const Wallet = () => {
     }
 
     const renderAccountDetails = () => (
-        <div>
+        <div className="account-details">
             <div>Address: {address}</div>
             <div>Balance: {userBalance}</div>
         </div>
     );
 
     const renderConnectButton = () => (
-        <button onClick={connectWalletHandler}>{connButtonText}</button>
+        <button className="button" onClick={connectWalletHandler}>
+            {connButtonText}
+        </button>
     );
 
     return (

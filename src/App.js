@@ -10,6 +10,11 @@ const Body = () => {
 
     return (
         <div>
+            <p>
+                Random Words is a collection of randomly generated words, stored
+                fully on-chain.
+            </p>
+            <p>Price per token: free </p>
             <AddressContext.Provider value={{ address, setAddress }}>
                 <Wallet />
                 <Mint />
@@ -24,11 +29,17 @@ const Header = () => (
     </header>
 );
 
-const App = () => (
-    <div className="container">
-        <Header />
-        <Body />
-    </div>
-);
+const App = () => {
+    const TWITTER_LINK = "https://twitter.com/_buildspace";
+    return (
+        <div className="container">
+            <Header />
+            <Body />
+            <div className="footer">
+                built with <a href={`${TWITTER_LINK}`}>@_buildspace</a>
+            </div>
+        </div>
+    );
+};
 
 export default App;

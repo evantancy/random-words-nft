@@ -35,9 +35,10 @@ html {
     text-align: center;
     flex-direction: column;
     justify-content: space-between;
+    position: relative;
 }
 
-.App-link {
+a {
     color: #61dafb;
 }
 
@@ -48,4 +49,45 @@ html {
     to {
         transform: rotate(360deg);
     }
+}
+
+.button {
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    background: #000000;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 14px 24px 16px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.account-details {
+    padding-bottom: 15px;
+}
+
+.button-small {
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    background: #000000;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 2px 5px 4px;
+    margin: 0px 5px 10px 5px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.footer {
+    position: absolute;
+    left: 50%;
+    bottom: 0%;
+    transform: translateX(-50%) translateY(-50%);
+    padding-bottom: 30px;
 }

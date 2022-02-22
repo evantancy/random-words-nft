@@ -1,12 +1,13 @@
-import React, { useState, useContext } from "react";
-import { ethers } from "ethers";
-import artifacts from "./artifacts/artifacts.json";
+import React, { useState, useContext, useEffect } from "react";
+import { ethers, BigNumber } from "ethers";
+import artifacts from "./saved_artifacts/artifacts.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AddressContext } from "./AddressContext";
 
 const Mint = () => {
     const { address } = useContext(AddressContext);
+    const [mintAmount, setMintAmount] = useState(0);
 
     const CONTRACT_ADDRESS = "0x67aB2c0a6164Fc65458497fa806DC5E35F5bB1b6";
     const RINKEBY_URL = "https://rinkeby.etherscan.io";
@@ -50,13 +51,37 @@ const Mint = () => {
 
     const renderMintButton = () => (
         <div>
-            <button onClick={callMint}>Mint</button>
+            <button className="button" onClick={callMint}>
+                Mint
+            </button>
             <ToastContainer />
         </div>
     );
 
+    // TODO: enable multiple minting
+    // const renderQuantityButton = () => (
+    //     <div>
+    //         <button
+    //             className="button-small"
+    //             onClick={() => setMintAmount(mintAmount - 1)}
+    //         >
+    //             -
+    //         </button>
+    //         {mintAmount}
+    //         <button
+    //             className="button-small"
+    //             onClick={() => setMintAmount(mintAmount + 1)}
+    //         >
+    //             +
+    //         </button>
+    //     </div>
+    // );
+
     return (
-        <div className="Mint">{address === null ? "" : renderMintButton()}</div>
+        <div className="Mint">
+            {/* {address === null ? "" : renderQuantityButton()} */}
+            {address === null ? "" : renderMintButton()}
+        </div>
     );
 };
 
