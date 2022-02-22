@@ -14,7 +14,7 @@ async function main() {
     // await hre.run('compile');
 
     // We get the contract to deploy
-    const RandomWords = await hre.ethers.getContractFactory("RandomPixels");
+    const RandomWords = await hre.ethers.getContractFactory("MyEpicNFT");
     const contract = await RandomWords.deploy();
     await contract.deployed();
     console.log("Contract deployed to:", contract.address);
@@ -24,7 +24,20 @@ async function main() {
     let txn = await contract.mint(1, overrides);
     // Wait for it to be mined.
     await txn.wait();
-    console.log("Minted NFT #1");
+    console.log("Minted NFT (single)");
+    let maxSupply = await contract.MAX_SUPPLY();
+    let currSupply = await contract.currentSupply();
+    console.log(maxSupply);
+    console.log(currSupply);
+
+    // txn = await contract.mint(2, overrides);
+    // // Wait for it to be mined.
+    // await txn.wait();
+    // console.log("Minted NFT (multiple)");
+    // maxSupply = await contract.MAX_SUPPLY();
+    // currSupply = await contract.currentSupply();
+    // console.log(maxSupply);
+    // console.log(currSupply);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
