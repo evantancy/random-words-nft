@@ -89,6 +89,7 @@ contract MyEpicNFT is ERC721 {
     constructor() ERC721("Random Words", "RW") {}
 
     function mint(uint256 _quantity) public {
+        require(_quantity > 0);
         require(tokenCounter.current() + _quantity + 1 <= MAX_SUPPLY);
         for (uint256 i = 0; i < _quantity; ++i) {
             _safeMint(msg.sender, tokenCounter.current());
