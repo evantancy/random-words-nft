@@ -17,16 +17,13 @@ const Wallet = () => {
             return;
         }
         try {
+            chainHandler();
             const accounts = await provider.request({
                 method: "eth_requestAccounts",
             });
             accountHandler(accounts[0]);
             // unused
             setConnButtonText("Connected");
-            const chainId = await provider.request({ method: "eth_chainId" });
-            if (chainId !== "0x4") {
-                alert("Switch to Rinkeby network!");
-            }
         } catch (error) {
             console.log(error);
         }
@@ -47,14 +44,22 @@ const Wallet = () => {
     };
 
     // reload window on changing networks
-    const chainHandler = (_chainId) => {
-        window.location.reload();
+    const chainHandler = async () => {
+        const RINKEBY_CHAINID = "0x4";
+        const chainId = await provider.request({ method: "eth_chainId" });
+
+        if (chainId !== RINKEBY_CHAINID) {
+            await window.ethereum.request({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId: RINKEBY_CHAINID }], // chainId must be in hexadecimal numbers
+            });
+        }
     };
 
     // listen for account changes
     if (provider) {
         provider.on("accountsChanged", accountHandler);
-        provider.on("chainChanged", chainHandler);
+        provider.on("chainChanged", connectWalletHandler);
     }
 
     const renderAccountDetails = () => (
