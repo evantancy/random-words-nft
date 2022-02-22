@@ -1,22 +1,24 @@
-pragma solidity ^0.8.0;
+pragma solidity >=0.8.0 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 import "base64-sol/base64.sol";
 
-contract MyEpicNFT is ERC721URIStorage {
+contract MyEpicNFT is ERC721 {
     using Counters for Counters.Counter;
     Counters.Counter private tokenCounter;
+    bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
+    uint256 public MAX_SUPPLY = 169;
+    uint256 public currentSupply = 0;
 
     struct Words {
         string first;
         string second;
         string third;
+        string bgColor;
     }
-
-    mapping(uint256 => Words) private tokenIdToWords;
 
     event NewMint(address _address, uint256 _tokenId);
 
@@ -59,73 +61,98 @@ contract MyEpicNFT is ERC721URIStorage {
         "Hedgehog"
     ];
 
+    string[] private bgColors = [
+        "#D7DFEC",
+        "#8CB0EA",
+        "#216CE4",
+        "#21E42A",
+        "#FADBD8",
+        "#28B463",
+        "#1ABC9C",
+        "#5DADE2",
+        "#DAF7A6",
+        "#FFC300",
+        "#2471A3",
+        "#FADBD8",
+        "#28B463",
+        "#1ABC9C",
+        "#5DADE2",
+        "#DAF7A6",
+        "#F1948A",
+        "#85C1E9",
+        "#C39BD3",
+        "#7D3C98",
+        "#138D75",
+        "#EBEDEF"
+    ];
+
     constructor() ERC721("Random Words", "RW") {}
 
-    function mint() public {
-        uint256 tokenId = tokenCounter.current();
-
-        tokenIdToWords[tokenId] = _createRandomWords(tokenId);
-        _safeMint(msg.sender, tokenId);
-        _setTokenURI(tokenId, getTokenURI(tokenId));
-
-        tokenCounter.increment();
-        console.log(
-            "An NFT w/ ID %s has been minted to %s",
-            tokenId,
-            msg.sender
-        );
-        emit NewMint(msg.sender, tokenId);
+    function mint(uint256 _quantity) public {
+        require(tokenCounter.current() + _quantity + 1 <= MAX_SUPPLY);
+        for (uint256 i = 0; i < _quantity; ++i) {
+            _safeMint(msg.sender, tokenCounter.current());
+            emit NewMint(msg.sender, tokenCounter.current());
+            tokenCounter.increment();
+            currentSupply += 1;
+        }
     }
 
-    function _createRandomWords(uint256 _tokenId)
+    function _createRandom(uint256 _tokenId)
         private
         view
-        returns (Words memory)
+        returns (uint256[4] memory)
     {
         uint256 pseudoRandom = uint256(
             keccak256(abi.encodePacked(_tokenId, msg.sender, block.timestamp))
         );
+        uint256[4] memory randomIndices;
+        randomIndices[0] = pseudoRandom >> 1;
+        randomIndices[1] = pseudoRandom >> 2;
+        randomIndices[2] = pseudoRandom >> 3;
+        randomIndices[3] = pseudoRandom >> 4;
 
-        string memory first = firstWords[
-            (pseudoRandom >> 1) % firstWords.length
-        ];
-        string memory second = secondWords[
-            (pseudoRandom >> 2) % secondWords.length
-        ];
-        string memory third = thirdWords[
-            (pseudoRandom >> 3) % thirdWords.length
-        ];
-
-        return Words(first, second, third);
+        return randomIndices;
     }
 
-    function createSvg(Words memory _words)
+    function getWords(uint256[4] memory _idArray)
+        private
+        view
+        returns (Words memory)
+    {
+        string memory first = firstWords[_idArray[0] % firstWords.length];
+        string memory second = secondWords[_idArray[1] % secondWords.length];
+        string memory third = thirdWords[_idArray[2] % thirdWords.length];
+        string memory bgColor = bgColors[_idArray[3] % bgColors.length];
+        return Words(first, second, third, bgColor);
+    }
+
+    function tokenURI(uint256 _tokenId)
         public
-        pure
+        view
+        override
         returns (string memory)
     {
-        return
-            string(
-                abi.encodePacked(
-                    '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350">',
-                    "<style>.base { fill: white; font-family: serif; font-size: 14px; }</style>",
-                    '<rect width="100%" height="100%" fill="black" />',
-                    '<text x="50%" y="50%" class="base" dominant-baseline="middle" text-anchor="middle">',
-                    _words.first,
-                    " ",
-                    _words.second,
-                    " ",
-                    _words.third,
-                    "</text></svg>"
-                )
-            );
-    }
+        require(_exists(_tokenId));
+        uint256[4] memory randIds = _createRandom(_tokenId);
+        Words memory words = getWords(randIds);
 
-    /// @dev View metadata for a specific token
-    /// @param _tokenId of token you wish to view metadata
-    /// @return base64 encoded string
-    function getTokenURI(uint256 _tokenId) public view returns (string memory) {
-        Words memory words = tokenIdToWords[_tokenId];
+        string memory svg = string(
+            abi.encodePacked(
+                '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 350 350">',
+                "<style>.base { fill: white; font-family: serif; font-size: 14px; }</style>",
+                '<rect width="100%" height="100%" fill="',
+                words.bgColor,
+                '" />',
+                '<text x="50%" y="50%" class="base" dominant-baseline="middle" text-anchor="middle">',
+                words.first,
+                " ",
+                words.second,
+                " ",
+                words.third,
+                "</text></svg>"
+            )
+        );
 
         return
             string(
@@ -138,7 +165,7 @@ contract MyEpicNFT is ERC721URIStorage {
                                     '{"name": "Random Words #',
                                     Strings.toString(_tokenId),
                                     '", "image": "data:image/svg+xml;base64,',
-                                    Base64.encode(bytes(createSvg(words))),
+                                    Base64.encode(bytes(svg)),
                                     '"}'
                                 )
                             )
