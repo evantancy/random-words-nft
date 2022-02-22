@@ -1,1 +1,3 @@
-# symmetrical-pixels-nft
+# random-pixels-nft
+
+
