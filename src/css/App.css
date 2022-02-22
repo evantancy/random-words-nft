@@ -9,6 +9,7 @@ html {
     background-color: var(--bg-color);
     color: white;
     font-family: var(--font);
+    font-size: 22px;
 }
 
 .header {

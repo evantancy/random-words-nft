@@ -30,13 +30,13 @@ const Header = () => (
 );
 
 const App = () => {
-    const TWITTER_LINK = "https://twitter.com/_buildspace";
+    const TWITTER_LINK = "https://twitter.com/nat_nave";
     return (
         <div className="container">
             <Header />
             <Body />
             <div className="footer">
-                built with <a href={`${TWITTER_LINK}`}>@_buildspace</a>
+                built by <a href={`${TWITTER_LINK}`}>@nat_nave</a>
             </div>
         </div>
     );
