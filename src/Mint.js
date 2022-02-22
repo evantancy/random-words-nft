@@ -9,7 +9,7 @@ const Mint = () => {
     const { address } = useContext(AddressContext);
     const [mintAmount, setMintAmount] = useState(0);
 
-    const CONTRACT_ADDRESS = "0x67aB2c0a6164Fc65458497fa806DC5E35F5bB1b6";
+    const CONTRACT_ADDRESS = "0x23bC2BeE10F8BDba5359F18dbA8d6E83b3067Bb8";
     const RINKEBY_URL = "https://rinkeby.etherscan.io";
 
     const toastOptions = {
