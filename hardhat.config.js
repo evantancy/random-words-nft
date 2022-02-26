@@ -1,5 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
-// require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-etherscan");
 require("hardhat-gas-reporter");
 
 const secrets = require("./secrets.json");
