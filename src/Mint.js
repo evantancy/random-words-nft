@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import { ethers, BigNumber } from "ethers";
+import React, { useState, useContext } from "react";
+import { ethers } from "ethers";
 import artifacts from "./saved_artifacts/artifacts.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
