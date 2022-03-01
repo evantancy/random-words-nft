@@ -10,7 +10,7 @@ const Mint = () => {
     const { chainId, setChainId } = useContext(ChainContext);
     const [mintAmount, setMintAmount] = useState(1);
 
-    const CONTRACT_ADDRESS = "0x23bC2BeE10F8BDba5359F18dbA8d6E83b3067Bb8";
+    const CONTRACT_ADDRESS = "0x28446ba6fb0d8d0f0728576bdd7fb18b360030a5";
     const RINKEBY_URL = "https://rinkeby.etherscan.io";
     const RINKEBY_CHAINID = "0x4";
 
