@@ -3,10 +3,12 @@ import "./css/App.css";
 import React, { useState } from "react";
 import Wallet from "./Wallet";
 import Mint from "./Mint";
-import { AddressContext } from "./AddressContext";
+import { AddressContext, ChainContext } from "./Context";
 
 const Body = () => {
+    // share states between Wallet.js and Mint.js
     const [address, setAddress] = useState(null);
+    const [chainId, setChainId] = useState(null);
 
     return (
         <div>
@@ -16,8 +18,10 @@ const Body = () => {
             </p>
             <p>Price per token: free </p>
             <AddressContext.Provider value={{ address, setAddress }}>
-                <Wallet />
-                <Mint />
+                <ChainContext.Provider value={{ chainId, setChainId }}>
+                    <Wallet />
+                    <Mint />
+                </ChainContext.Provider>
             </AddressContext.Provider>
         </div>
     );

@@ -3,14 +3,16 @@ import { ethers } from "ethers";
 import artifacts from "./saved_artifacts/artifacts.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AddressContext } from "./AddressContext";
+import { AddressContext, ChainContext } from "./Context";
 
 const Mint = () => {
     const { address } = useContext(AddressContext);
+    const { chainId, setChainId } = useContext(ChainContext);
     const [mintAmount, setMintAmount] = useState(1);
 
     const CONTRACT_ADDRESS = "0x23bC2BeE10F8BDba5359F18dbA8d6E83b3067Bb8";
     const RINKEBY_URL = "https://rinkeby.etherscan.io";
+    const RINKEBY_CHAINID = "0x4";
 
     // let currentSupply;
     // let maxSupply;
@@ -23,9 +25,12 @@ const Mint = () => {
     };
 
     const callMint = async () => {
-        if (!window.ethereum) {
+        if (!window.ethereum) return;
+        if (chainId !== RINKEBY_CHAINID) {
+            alert("Switch to Rinkeby network!");
             return;
         }
+
         try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();

@@ -1,11 +1,12 @@
 import React, { useState, useContext } from "react";
 import { utils } from "ethers";
-import { AddressContext } from "./AddressContext";
+import { AddressContext, ChainContext } from "./Context";
 
 const Wallet = () => {
     const [userBalance, setUserBalance] = useState(null);
     const [connButtonText, setConnButtonText] = useState("Connect Wallet");
     const { address, setAddress } = useContext(AddressContext);
+    const { chainId, setChainId } = useContext(ChainContext);
 
     const provider = window.ethereum;
 
@@ -46,14 +47,16 @@ const Wallet = () => {
     // reload window on changing networks
     const chainHandler = async () => {
         const RINKEBY_CHAINID = "0x4";
-        const chainId = await provider.request({ method: "eth_chainId" });
+        let currentChain = await provider.request({ method: "eth_chainId" });
 
-        if (chainId !== RINKEBY_CHAINID) {
+        if (currentChain !== RINKEBY_CHAINID) {
             await window.ethereum.request({
                 method: "wallet_switchEthereumChain",
                 params: [{ chainId: RINKEBY_CHAINID }], // chainId must be in hexadecimal numbers
             });
         }
+        currentChain = await provider.request({ method: "eth_chainId" });
+        setChainId(currentChain);
     };
 
     // listen for account changes
