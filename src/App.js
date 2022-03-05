@@ -43,7 +43,11 @@ const Links = () => {
 
     return (
         <div className="links">
-            <a href={`${TESTNET_URL}`} target="_blank" rel="noreferrer">
+            <a
+                href={`${TESTNET_URL}`}
+                target="_blank"
+                rel="noreferrer noopener"
+            >
                 <img
                     src={openseaLogo}
                     className="link-logo"
@@ -53,7 +57,7 @@ const Links = () => {
             <a
                 href={`${RINKEBY_URL}/address/${CONTRACT_ADDRESS}`}
                 target="_blank"
-                rel="noreferrer"
+                rel="noreferrer noopener"
             >
                 <img
                     src={etherscanLogo}
