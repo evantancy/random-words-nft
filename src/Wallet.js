@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
 import { utils } from "ethers";
+import { useContext, useState } from "react";
 import { AddressContext, ChainContext } from "./Context";
 
 const Wallet = () => {
@@ -48,18 +48,16 @@ const Wallet = () => {
     const chainHandler = async () => {
         const RINKEBY_CHAINID = "0x4";
         let currentChain = await provider.request({ method: "eth_chainId" });
-
         if (currentChain !== RINKEBY_CHAINID) {
-            await window.ethereum.request({
+            await provider.request({
                 method: "wallet_switchEthereumChain",
-                params: [{ chainId: RINKEBY_CHAINID }], // chainId must be in hexadecimal numbers
+                params: [{ chainId: RINKEBY_CHAINID }],
             });
         }
         currentChain = await provider.request({ method: "eth_chainId" });
         setChainId(currentChain);
     };
 
-    // listen for account changes
     if (provider) {
         provider.on("accountsChanged", accountHandler);
         provider.on("chainChanged", connectWalletHandler);

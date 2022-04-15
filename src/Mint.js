@@ -4,6 +4,7 @@ import artifacts from "./saved_artifacts/artifacts.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AddressContext, ChainContext } from "./Context";
+import { MerkleTree } from "merkletreejs";
 
 const Mint = () => {
     const { address } = useContext(AddressContext);
@@ -24,6 +25,20 @@ const Mint = () => {
         hideProgressBar: true,
     };
 
+    const whitelisted = [
+        "0x92668e1E6Bbf1e7681A178FCcC144B99298bBA6a",
+        "0xCd64F8daDe506A89f617B7056e4539996e74983f",
+        "0x7E91f48Cb65642d55dc2e8cF2B21be3b50a7Ba9f",
+        "0x49B5AF99714EEdF8B6CA10e7d31Dc2c712f2d23d",
+    ];
+
+    const leafNodes = whitelisted.map((addr) => ethers.utils.keccak256(addr));
+    const merkleTree = new MerkleTree(leafNodes, ethers.utils.keccak256, {
+        sortPairs: true,
+    });
+    const rootHash = merkleTree.getRoot().toString("hex");
+    console.log("Merkle root", rootHash);
+
     const callMint = async () => {
         if (!window.ethereum) return;
         if (chainId !== RINKEBY_CHAINID) {
@@ -41,7 +56,17 @@ const Mint = () => {
             );
 
             // call Solidity mint function
-            const tx = await contract.mint(mintAmount);
+            let tx;
+            if (contract.presaleActive()) {
+                const hashedAddress = ethers.utils.keccak256(address);
+                const proof = merkleTree.getProof(hashedAddress);
+                tx = await contract.mintPresale(mintAmount, proof);
+            } else if (contract.saleActive()) {
+                tx = await contract.mintPublic(mintAmount);
+            } else {
+                console.log("Mint not active");
+            }
+
             toast(
                 <a
                     href={`${RINKEBY_URL}/tx/${tx.hash}`}
