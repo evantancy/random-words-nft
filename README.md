@@ -3,6 +3,8 @@
 An NFT drop I created as part of [@_buildspace](https://twitter.com/_buildspace)'s Ethereum NFT project.
 I have extended the my application & smart contracts to allow additional features below (while they may not be 100% gas optimized):
 
+See [RandomWordsERC721A.sol](https://github.com/evantancy/solidity-contracts/blob/main/src/RandomWordsERC721A.sol) for smart contract
+
 Additional features:
 - Front-end
   - MetaMask prompt to switch to Rinkeby network
